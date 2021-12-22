@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -36,6 +37,7 @@ export default {
       filename: 'index.html',
       template: './src/index.template.html',
     }),
+    new ReactRefreshWebpackPlugin(),
   ],
   devServer: {
     hot: true,
