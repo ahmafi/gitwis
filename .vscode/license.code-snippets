@@ -1,0 +1,10 @@
+{
+  "GitWis License Header": {
+    "prefix": "lcs",
+    "body": "// SPDX-FileCopyrightText: 2021 Amir Hossein Mafi <amir77mafi@gmail.com>\n// SPDX-License-Identifier: LGPL-3.0-or-later\n"
+  },
+  "GitWis License Header HTML": {
+    "prefix": "lcsh",
+    "body": "<!-- SPDX-FileCopyrightText: 2021 Amir Hossein Mafi <amir77mafi@gmail.com> -->\n<!-- SPDX-License-Identifier: LGPL-3.0-or-later -->\n"
+  }
+}

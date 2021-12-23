@@ -1,20 +1,20 @@
 {
-  "name": "gittools",
+  "name": "gitwis",
   "version": "0.1.0",
-  "description": "git tools",
+  "description": "GitWis",
   "keywords": [
-    "calendar",
+    "git",
     "react"
   ],
-  "homepage": "https://github.com/ahmafi/gittools#readme",
+  "homepage": "https://github.com/ahmafi/gitwis#readme",
   "bugs": {
-    "url": "https://github.com/ahmafi/gittools/issues"
+    "url": "https://github.com/ahmafi/gitwis/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmafi/gittools.git"
+    "url": "git+https://github.com/ahmafi/gitwis.git"
   },
-  "license": "MIT",
+  "license": "LGPL-3.0-or-later",
   "author": {
     "name": "Amir Hossein Mafi",
     "email": "amir77mafi@gmail.com",
@@ -32,7 +32,6 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.16.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
