@@ -22,11 +22,6 @@ module.exports = {
   ],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    // Workaround for a know airbnb style guide issue
-    // https://github.com/airbnb/javascript/issues/2505
-    'react/function-component-definition': [2, {
-      namedComponents: 'function-declaration',
-    }],
-    'max-len': ['error', { code: 80 }],
+    'max-len': ['error', { code: 80, ignoreTrailingComments: true }],
   },
 };
