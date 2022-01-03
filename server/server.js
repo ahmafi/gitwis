@@ -4,6 +4,8 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const p = require('path');
+const fs = require('fs/promises');
+const fsc = require('fs').constants;
 const logger = require('./logger');
 const options = require('./options');
 const graphql = require('./graphql');
@@ -14,10 +16,10 @@ const graphql = require('./graphql');
 
   const websiteDir = p.join(__dirname, '../dist');
   try {
-    // await checkFile(distDir);
+    await fs.access(websiteDir, fsc.R_OK);
   } catch (err) {
     logger.errorE(err);
-    process.exit(1);
+    return;
   }
 
   const app = express();
