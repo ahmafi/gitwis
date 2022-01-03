@@ -1,0 +1,29 @@
+{
+  "name": "gitwis-server",
+  "version": "0.1.0",
+  "description": "GitWis Server",
+  "keywords": [
+    "git"
+  ],
+  "homepage": "https://github.com/ahmafi/gitwis#readme",
+  "bugs": {
+    "url": "https://github.com/ahmafi/gitwis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmafi/gitwis.git"
+  },
+  "license": "LGPL-3.0-or-later",
+  "author": {
+    "name": "Amir Hossein Mafi",
+    "email": "amir77mafi@gmail.com",
+    "url": "https://github.com/ahmafi"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "winston": "^3.3.3"
+  }
+}
