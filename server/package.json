@@ -21,9 +21,13 @@
   },
   "main": "server.js",
   "scripts": {
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
   "dependencies": {
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
