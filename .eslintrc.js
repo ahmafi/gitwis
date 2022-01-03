@@ -22,6 +22,14 @@ module.exports = {
   ],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'max-len': ['error', { code: 80, ignoreTrailingComments: true }],
+    'max-len': ['error',
+      {
+        code: 80,
+        tabWidth: 2,
+        ignoreComments: true,
+        ignoreTemplateLiterals: true,
+        ignoreRegExpLiterals: true,
+      }],
+  },
   },
 };
