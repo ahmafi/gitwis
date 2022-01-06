@@ -2,11 +2,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-export default {
+const webpackConfig =  {
   target: 'browserslist',
   mode: 'development',
   devtool: 'inline-source-map',
@@ -31,6 +34,9 @@ export default {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    fallback: {
+      path: require.resolve('path-browserify'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -41,5 +47,11 @@ export default {
   ],
   devServer: {
     hot: true,
+    port: 8080,
+    proxy: {
+      '/graphql': 'http://localhost:8000/graphql',
+    },
   },
 };
+
+export default webpackConfig;
