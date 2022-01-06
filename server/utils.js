@@ -35,10 +35,12 @@ exports.getFiles = async function getFiles(
 
   let files = await fs.readdir(fullPath);
 
-  if (files.length === 0) return null;
+  if (files.length === 0) return [];
 
   if (isGit) {
     const ignoredFiles = await git.checkIgnore(files);
+    ignoredFiles.push('.git'); // TODO: additional ignore files comes here
+    // TODO: ignore .git only if it's root directory of git repo
     files = files.filter((file) => !ignoredFiles.includes(file));
   }
 
