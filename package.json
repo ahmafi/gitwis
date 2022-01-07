@@ -25,7 +25,7 @@
     "dev": "webpack serve",
     "lint": "eslint . --cache --ext .js,.mjs,.jsx,.json",
     "server": "concurrently \"npm run server:dev\" \"npm run dev\"",
-    "server:dev": "cd server && npm run dev"
+    "server:dev": "cd server && npm run dev -- .."
   },
   "browserslist": "defaults",
   "dependencies": {
