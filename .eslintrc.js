@@ -20,7 +20,7 @@ module.exports = {
     'json-format',
   ],
   rules: {
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'quotes': ['error', 'single'],
     'max-len': ['error',
       {
         code: 80,
@@ -30,5 +30,23 @@ module.exports = {
         ignoreRegExpLiterals: true,
       }],
   },
-  },
+  'overrides': [
+    {
+      'files': ['*.gql'],
+      'extends': [
+        'plugin:@graphql-eslint/schema-recommended',
+        'plugin:@graphql-eslint/operations-recommended'
+      ],
+      'rules': {
+        '@graphql-eslint/executable-definitions': 'off',
+        '@graphql-eslint/strict-id-in-types': [
+          'error',
+          { 
+            acceptedIdNames: ['name'],
+            acceptedIdTypes: ['String', 'ID']
+          }
+        ]
+      },
+    }
+  ],
 };

@@ -7,11 +7,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["javascript", "json"],
+  "eslint.validate": ["javascript", "json", "graphql"],
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[graphql]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "licenser.customHeader": "SPDX-FileCopyrightText: 2021 Amir Hossein Mafi <amir77mafi@gmail.com>\\nSPDX-License-Identifier: LGPL-3.0-or-later",

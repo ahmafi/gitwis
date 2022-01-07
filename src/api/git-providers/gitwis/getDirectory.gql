@@ -1,4 +1,4 @@
-query GetFiles($path: String!) {
+query Files($path: String!) {
   files(path: $path) {
     name
     extension

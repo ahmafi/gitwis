@@ -24,7 +24,7 @@
     "build": "webpack --config webpack.config.mjs",
     "dev": "webpack serve",
     "license": "node scripts/license-checker.js",
-    "lint": "eslint . --cache --ext .js,.mjs,.jsx,.json",
+    "lint": "eslint . --cache --ext .js,.mjs,.jsx,.json,.gql",
     "server": "concurrently \"npm run server:dev\" \"npm run dev\"",
     "server:dev": "cd server && npm run dev -- .."
   },
@@ -40,6 +40,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.16.5",
+    "@graphql-eslint/eslint-plugin": "^3.6.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "babel-loader": "^8.2.3",
     "browserslist": "^4.19.1",
