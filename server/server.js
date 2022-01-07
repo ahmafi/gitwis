@@ -25,10 +25,9 @@ const graphql = require('./graphql');
   const app = express();
   app.use(express.static(websiteDir));
 
-  const gql = await graphql(args);
+  const schema = await graphql(args);
   app.use('/graphql', graphqlHTTP({
-    schema: gql.schema,
-    rootValue: gql.rootValue,
+    schema,
     graphiql: true,
   }));
 

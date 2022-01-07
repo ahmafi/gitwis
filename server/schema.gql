@@ -1,0 +1,11 @@
+type Query {
+  files(path: String!): [File!]
+}
+
+type File {
+  name: String!
+  extension: String
+  size: Int!
+  isDir: Boolean!
+  dirFileCount: Int
+}
