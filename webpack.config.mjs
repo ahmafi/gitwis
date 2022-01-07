@@ -25,6 +25,15 @@ const webpackConfig =  {
           },
         ],
       },
+      {
+        test: /\.gql$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'webpack-graphql-loader',
+          },
+        ],
+      },
     ],
   },
   output: {

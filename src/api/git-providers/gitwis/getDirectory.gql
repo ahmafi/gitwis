@@ -1,0 +1,9 @@
+query GetFiles($path: String!) {
+  files(path: $path) {
+    name
+    extension
+    size
+    isDir
+    dirFileCount
+  }
+}

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getDirectory } from '../../api/git-providers/gitwis/gitwis';
 
 const initialState = {
   currentPath: '/',
@@ -10,30 +11,7 @@ const initialState = {
 export const fetchDirectory = createAsyncThunk(
   'files/fetchDirectory',
   async (path) => {
-    const response = await fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: `#graphql
-          query GetFiles($path: String!) {
-            files(path: $path) {
-              name
-              extension
-              size
-              isDir
-              dirFileCount
-            }
-          }
-        `,
-        variables: {
-          path,
-        },
-      }),
-    });
-    const responseJSON = await response.json();
-    return responseJSON.data.files;
+    return await getDirectory(path)
   },
 );
 
