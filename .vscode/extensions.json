@@ -1,3 +1,7 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "ymotongpoo.licenser"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "ymotongpoo.licenser",
+    "graphql.vscode-graphql"
+  ]
 }

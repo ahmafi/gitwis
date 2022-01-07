@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "gitwis": {
+      "schema": "./server/schema.gql",
+      "documents": "./src/api/git-providers/gitwis/*.gql",
+      "extensions": {
+        "endpoints": {
+          "default": {
+            "url": "http://localhost:8000/graphql"
+          }
+        }
+      }
+    }
+  }
+}
