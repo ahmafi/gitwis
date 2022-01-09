@@ -2,6 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "ymotongpoo.licenser",
-    "graphql.vscode-graphql"
+    "graphql.vscode-graphql",
+    "esbenp.prettier-vscode"
   ]
 }
