@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-const webpackConfig =  {
+const webpackConfig = {
   target: 'browserslist',
   mode: 'development',
   devtool: 'inline-source-map',
@@ -19,18 +19,17 @@ const webpackConfig =  {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-        ],
+        use: [{ loader: 'babel-loader' }],
       },
       {
         test: /\.gql$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'webpack-graphql-loader',
+            loader: '@graphql-tools/webpack-loader',
+            options: {
+              esModules: true,
+            },
           },
         ],
       },

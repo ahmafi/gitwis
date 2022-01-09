@@ -26,10 +26,14 @@ const graphql = require('./graphql');
   app.use(express.static(websiteDir));
 
   const schema = await graphql(args);
-  app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true,
-  }));
+
+  app.use(
+    '/graphql',
+    graphqlHTTP({
+      schema,
+      graphiql: true,
+    })
+  );
 
   let server;
 
@@ -40,22 +44,22 @@ const graphql = require('./graphql');
 
   if (args.port === 'auto') {
     let port = 8000;
-    server = app.listen(port, serverStarted)
-      .on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-          if (port === 65535) port = 0;
-          if (port === 7999) {
-            logger.error('no port found');
-          } else {
-            port += 1;
-            server.listen(port);
-          }
+    server = app.listen(port, serverStarted).on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        if (port === 65535) port = 0;
+        if (port === 7999) {
+          logger.error('no port found');
         } else {
-          logger.errorE(err);
+          port += 1;
+          server.listen(port);
         }
-      });
+      } else {
+        logger.errorE(err);
+      }
+    });
   } else {
-    server = app.listen(args.port, '127.0.0.1', serverStarted)
+    server = app
+      .listen(args.port, '127.0.0.1', serverStarted)
       .on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
           logger.errorE(err, false);

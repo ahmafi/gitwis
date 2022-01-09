@@ -15,7 +15,7 @@ exports.errorToObject = (err) => {
 
 exports.getFiles = async function getFiles(
   { path, git, isGit },
-  relPath = '.',
+  relPath = '.'
 ) {
   const fullPath = p.join(path, relPath);
 
@@ -54,9 +54,7 @@ exports.getFiles = async function getFiles(
       const fileStat = await fs.stat(p.join(fullPath, file));
 
       if (fileStat.isDirectory()) {
-        const fileCount = (await fs.readdir(
-          p.join(fullPath, file),
-        )).length;
+        const fileCount = (await fs.readdir(p.join(fullPath, file))).length;
 
         result.isDir = true;
         result.dirFileCount = fileCount;
@@ -67,7 +65,7 @@ exports.getFiles = async function getFiles(
       result.size = fileStat.size;
 
       return result;
-    }),
+    })
   );
 
   // TODO: file hash

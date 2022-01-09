@@ -1,42 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import path from 'path';
-import { fetchDirectory } from './filesSlice';
+import { fetchDirectory, selectCurrentFilesSorted } from './filesSlice';
 
 function FilesList() {
   const dispatch = useDispatch();
   const currentPath = useSelector((state) => state.files.currentPath);
-  const status = useSelector(state => 
-    state.files[currentPath].status
-  );
-  
+  const status = useSelector((state) => state.files[currentPath].status);
+
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchDirectory(currentPath))
+      dispatch(fetchDirectory(currentPath));
     }
-  }, [status, dispatch, currentPath])
-  
-  const files = useSelector((state) => {
-    if (state.files[currentPath].filesList) {
-      const sortedByName = [...state.files[currentPath].filesList];
-      sortedByName.sort((firstEl, secondEl) => {
-        if (!secondEl.isDir
-           || secondEl.name.toLowerCase() > firstEl.name.toLowerCase()) {
-          return -1;
-        }
-        return 0;
-      });
-      return sortedByName;
-    }
-  });
+  }, [status, dispatch, currentPath]);
 
-  const changePath = (selectedTr) => {
-    const isDir = selectedTr.classList.contains('dir');
-    if (isDir) {
-      const name = selectedTr.querySelector('.name').innerText;
-      dispatch(fetchDirectory(path.join(currentPath, name)));
-    }
-  };
+  const files = useSelector(
+    (state) =>
+      status === 'fulfilled' && selectCurrentFilesSorted(state, currentPath)
+  );
+
+  const changePath = useCallback(
+    (event) => {
+      const selectedTr = event.currentTarget;
+      const isDir = selectedTr.classList.contains('dir');
+      if (isDir) {
+        const name = selectedTr.querySelector('.name').innerText;
+        dispatch(fetchDirectory(path.join(currentPath, name)));
+      }
+    },
+    [dispatch, currentPath]
+  );
 
   const renderFiles = () => (
     <table
@@ -47,22 +40,22 @@ function FilesList() {
       <thead>
         <tr>
           {Object.keys(files[0]).map((key) => (
-            <th key={key} style={{ textAlign: 'left' }}>{key}</th>
+            <th key={key} style={{ textAlign: 'left' }}>
+              {key}
+            </th>
           ))}
         </tr>
       </thead>
+
       <tbody>
         {files.map((file) => (
           <tr
-            key={file.name}
-            onClick={(event) => changePath(event.currentTarget)}
             className={file.isDir ? 'dir' : 'file'}
+            key={file.name}
+            onClick={changePath}
           >
             {Object.entries(file).map(([key, value]) => (
-              <td
-                key={key}
-                className={key}
-              >
+              <td className={key} key={key}>
                 {value !== null && value.toString()}
               </td>
             ))}
@@ -72,19 +65,23 @@ function FilesList() {
     </table>
   );
 
-  const back = () => {
+  const back = useCallback(() => {
     if (currentPath !== '/') {
       dispatch(fetchDirectory(path.join(currentPath, '..')));
     }
-  };
+  }, [dispatch, currentPath]);
 
   return (
     <div>
       <h2>{`Current Path:  ${currentPath}`}</h2>
+
       <div>
-        <button type="button" onClick={() => back()}>Back</button>
+        <button onClick={back} type='button'>
+          {currentPath}
+        </button>
       </div>
-      {(files && files.length > 0) ? renderFiles() : null}
+
+      {status === 'fulfilled' && files.length > 0 && renderFiles()}
     </div>
   );
 }

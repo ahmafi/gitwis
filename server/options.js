@@ -41,7 +41,9 @@ const validatePort = async (port) => {
     if (Number.isNaN(portNum)) {
       throw new Error(`${portNum} is an invalid port number`);
     } else if (portNum < 1 || portNum >= 65535) {
-      throw new Error(`${portNum} is in invalid range. valid range is (1-65535)`);
+      throw new Error(
+        `${portNum} is in invalid range. valid range is (1-65535)`
+      );
     }
   }
 };
@@ -49,23 +51,19 @@ const validatePort = async (port) => {
 module.exports = async function resolveOptions() {
   const program = new commander.Command();
   program
-    .showHelpAfterError(
-      '\nRun \'gitwis-cli --help\' to see available options',
-    )
+    .showHelpAfterError("\nRun 'gitwis-cli --help' to see available options")
     .showSuggestionAfterError()
     .version(pkgjson.version)
     .option('--no-color', 'disable colors on console.')
     .addOption(
-      new commander
-        .Option('-p, --port <Port>', 'server port. 0 takes a random port')
+      new commander.Option(
+        '-p --port <Port>',
+        'server port. 0 takes a random port'
+      )
         .env('PORT')
-        .default('auto'),
+        .default('auto')
     )
-    .addArgument(
-      new commander
-        .Argument('[path]')
-        .default('./'),
-    )
+    .addArgument(new commander.Argument('[path]').default('./'))
     .action(async (path, options) => {
       if (!options.color) {
         logger.changeCliFormat({ color: false });
@@ -94,8 +92,10 @@ module.exports = async function resolveOptions() {
   }
 
   if (!isGit && gitInstalled) {
-    logger.warn('Not a git repository (or any of the parent directories), '
-              + 'some features are disabled');
+    logger.warn(
+      'Not a git repository (or any of the parent directories), ' +
+        'some features are disabled'
+    );
   }
 
   return {

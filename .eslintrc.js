@@ -5,8 +5,10 @@ module.exports = {
     node: true,
   },
   extends: [
-    'plugin:react/recommended',
-    'react-app'
+    'eslint:recommended',
+    'plugin:react/all',
+    'plugin:react-hooks/recommended',
+    'prettier',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -15,38 +17,28 @@ module.exports = {
     ecmaVersion: 13,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'json-format',
-  ],
-  rules: {
-    'quotes': ['error', 'single'],
-    'max-len': ['error',
-      {
-        code: 80,
-        tabWidth: 2,
-        ignoreComments: true,
-        ignoreTemplateLiterals: true,
-        ignoreRegExpLiterals: true,
-      }],
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
-  'overrides': [
+  plugins: ['react'],
+  overrides: [
     {
-      'files': ['*.gql'],
-      'extends': [
+      files: ['*.gql'],
+      extends: [
         'plugin:@graphql-eslint/schema-recommended',
-        'plugin:@graphql-eslint/operations-recommended'
+        'plugin:@graphql-eslint/operations-recommended',
       ],
-      'rules': {
+      rules: {
         '@graphql-eslint/executable-definitions': 'off',
         '@graphql-eslint/strict-id-in-types': [
           'error',
-          { 
-            acceptedIdNames: ['name'],
-            acceptedIdTypes: ['String', 'ID']
-          }
-        ]
+          {
+            exceptions: { types: ['File'] },
+          },
+        ],
       },
-    }
+    },
   ],
 };

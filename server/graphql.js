@@ -5,13 +5,12 @@ const p = require('path');
 const { getFiles } = require('./utils');
 const { loadSchemaSync } = require('@graphql-tools/load');
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
-const { makeExecutableSchema } = require('@graphql-tools/schema')
-;
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+
 module.exports = async (programArgs) => {
-  const typeDefs  = loadSchemaSync(
-    p.join(__dirname, 'schema.gql'), 
-    { loaders: [new GraphQLFileLoader()] }
-  );
+  const typeDefs = loadSchemaSync(p.join(__dirname, 'schema.gql'), {
+    loaders: [new GraphQLFileLoader()],
+  });
 
   const resolvers = {
     Query: {
@@ -19,11 +18,11 @@ module.exports = async (programArgs) => {
         const files = await getFiles(programArgs, path);
         return files;
       },
-    }
+    },
   };
 
   return makeExecutableSchema({
     typeDefs,
-    resolvers
+    resolvers,
   });
 };

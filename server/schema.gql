@@ -1,9 +1,13 @@
-""" Main query """
+"""
+Main query
+"""
 type Query {
   files(path: String!): [File!]
 }
 
-""" File information """
+"""
+File information
+"""
 type File {
   name: String!
   extension: String

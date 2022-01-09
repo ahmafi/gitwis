@@ -4,28 +4,27 @@
 const { createLogger, format, transports } = require('winston');
 const { errorToObject } = require('./utils');
 
-const {
-  combine, colorize, align, printf,
-} = format;
+const { combine, colorize, align, printf } = format;
 
 const noopFormat = format((info) => info);
 
-const createCliFormat = (opts) => combine(
-  opts.color ? colorize({ all: true }) : noopFormat(),
-  align(),
-  printf((info) => {
-    let formatWithStack = `${info.level}: ${info.message}`;
-    if (info.stack) {
-      formatWithStack += `\n  ${info.stack.join('\n  ')}`;
-    }
-    return formatWithStack;
-  }),
-);
+const createCliFormat = (opts) =>
+  combine(
+    opts.color ? colorize({ all: true }) : noopFormat(),
+    align(),
+    printf((info) => {
+      let formatWithStack = `${info.level}: ${info.message}`;
+      if (info.stack) {
+        formatWithStack += `\n  ${info.stack.join('\n  ')}`;
+      }
+      return formatWithStack;
+    })
+  );
 
 const logger = createLogger({
-  transports: [new transports.Console(
-    { format: createCliFormat({ color: true }) },
-  )],
+  transports: [
+    new transports.Console({ format: createCliFormat({ color: true }) }),
+  ],
 });
 
 logger.changeCliFormat = (opts) => {

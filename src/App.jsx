@@ -5,7 +5,5 @@ import React from 'react';
 import FilesList from './features/files/FilesList';
 
 export default function App() {
-  return (
-    <FilesList />
-  );
+  return <FilesList />;
 }
