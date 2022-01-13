@@ -48,7 +48,7 @@ exports.getFiles = async function getFiles(
     files.map(async (file) => {
       const result = {
         name: file,
-        extension: p.extname(file),
+        extension: p.extname(file).slice(1),
       };
 
       const fileStat = await fs.stat(p.join(fullPath, file));
