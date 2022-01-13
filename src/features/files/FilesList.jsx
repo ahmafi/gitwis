@@ -2,6 +2,19 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import path from 'path';
 import { fetchDirectory, selectCurrentFilesSorted } from './filesSlice';
+import {
+  BackArrow,
+  Path,
+  StyledFilesList,
+  Table,
+  TableBCell,
+  TableBody,
+  TableContainer,
+  TableHCell,
+  TableHead,
+  TableRow,
+  Toolbar,
+} from './styles/FilesListStyle';
 
 function FilesList() {
   const dispatch = useDispatch();
@@ -22,47 +35,40 @@ function FilesList() {
   const changePath = useCallback(
     (event) => {
       const selectedTr = event.currentTarget;
-      const isDir = selectedTr.classList.contains('dir');
-      if (isDir) {
-        const name = selectedTr.querySelector('.name').innerText;
-        dispatch(fetchDirectory(path.join(currentPath, name)));
-      }
+      const name = selectedTr.querySelector('.name').innerText;
+      dispatch(fetchDirectory(path.join(currentPath, name)));
     },
     [dispatch, currentPath]
   );
 
   const renderFiles = () => (
-    <table
-      style={{
-        width: '100%',
-      }}
-    >
-      <thead>
-        <tr>
-          {Object.keys(files[0]).map((key) => (
-            <th key={key} style={{ textAlign: 'left' }}>
-              {key}
-            </th>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {files.map((file) => (
-          <tr
-            className={file.isDir ? 'dir' : 'file'}
-            key={file.name}
-            onClick={changePath}
-          >
-            {Object.entries(file).map(([key, value]) => (
-              <td className={key} key={key}>
-                {value !== null && value.toString()}
-              </td>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {Object.keys(files[0]).map((key) => (
+              <TableHCell key={key}>{key}</TableHCell>
             ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {files.map((file) => (
+            <TableRow
+              key={file.name}
+              onClick={file.isDir ? changePath : undefined}
+              isDir={file.isDir}
+            >
+              {Object.entries(file).map(([key, value]) => (
+                <TableBCell className={key} key={key}>
+                  {value !== null && value.toString()}
+                </TableBCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 
   const back = useCallback(() => {
@@ -72,17 +78,13 @@ function FilesList() {
   }, [dispatch, currentPath]);
 
   return (
-    <div>
-      <h2>{`Current Path:  ${currentPath}`}</h2>
-
-      <div>
-        <button onClick={back} type='button'>
-          {currentPath}
-        </button>
-      </div>
-
+    <StyledFilesList>
+      <Toolbar>
+        <BackArrow onClick={back} />
+        <Path>{`${currentPath}`}</Path>
+      </Toolbar>
       {status === 'fulfilled' && files.length > 0 && renderFiles()}
-    </div>
+    </StyledFilesList>
   );
 }
 
