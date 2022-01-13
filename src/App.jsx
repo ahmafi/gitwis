@@ -3,6 +3,7 @@
 
 import React from 'react';
 import FilesList from './features/files/FilesList';
+import GlobalStyle from './styles/Global';
 import { ThemeProvider } from 'styled-components';
 
 import '@fontsource/roboto/300.css';
@@ -40,6 +41,7 @@ const darkTheme = {
 export default function App() {
   return (
     <ThemeProvider theme={darkTheme}>
+      <GlobalStyle />
       <FilesList />
     </ThemeProvider>
   );
