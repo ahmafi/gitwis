@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:react/all',
+    'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
   ],
@@ -41,4 +41,8 @@ module.exports = {
       },
     },
   ],
+  globals: {
+    HOST: 'readonly',
+    PORT: 'readonly',
+  },
 };
