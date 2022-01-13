@@ -60,11 +60,15 @@ const GlobalStyle = createGlobalStyle`
     list-style: none;
   }
 
+  body {
+    background-color: ${({ theme }) => theme.colors.background};
+  }
+
   #root {
     display: flex;
     flex-direction: column;
-    background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text.background};
+
   }
 `;
 
