@@ -13,27 +13,49 @@ exports.errorToObject = (err) => {
   return obj;
 };
 
+const getFilesInfo = (absFullPath, files) => {
+  return Promise.all(
+    files.map(async (file) => {
+      const result = { name: file };
+
+      const fileStat = await fs.stat(p.join(absFullPath, file));
+
+      if (fileStat.isDirectory()) {
+        const dirFiles = await fs.readdir(p.join(absFullPath, file));
+
+        result.children = dirFiles;
+      } else {
+        result.extension = p.extname(file).slice(1);
+      }
+
+      result.size = fileStat.size;
+
+      return result;
+    })
+  );
+};
+
 exports.getFiles = async function getFiles(
-  { path, git, isGit },
+  { rootPath, git, isGit },
   relPath = '.'
 ) {
-  const fullPath = p.join(path, relPath);
+  const absFullPath = p.join(rootPath, relPath);
 
-  if (!fullPath.startsWith(path)) {
+  if (!absFullPath.startsWith(rootPath)) {
     return new Error('invalid path');
   }
 
   try {
-    await fs.access(fullPath, fsc.R_OK);
+    await fs.access(absFullPath, fsc.R_OK);
   } catch {
     return new Error('invalid path');
   }
 
-  if (!(await fs.stat(fullPath)).isDirectory()) {
+  if (!(await fs.stat(absFullPath)).isDirectory()) {
     return new Error('not a directory');
   }
 
-  let files = await fs.readdir(fullPath);
+  let files = await fs.readdir(absFullPath);
 
   if (files.length === 0) return [];
 
@@ -44,27 +66,47 @@ exports.getFiles = async function getFiles(
     files = files.filter((file) => !ignoredFiles.includes(file));
   }
 
-  const filesInfo = await Promise.all(
-    files.map(async (file) => {
-      const result = {
-        name: file,
-        extension: p.extname(file).slice(1),
-      };
+  const filesInfo = await getFilesInfo(absFullPath, files);
 
-      const fileStat = await fs.stat(p.join(fullPath, file));
+  // TODO: file hash
+  return filesInfo;
+};
 
-      if (fileStat.isDirectory()) {
-        const fileCount = (await fs.readdir(p.join(fullPath, file))).length;
+exports.getProject = async function getProject(
+  { rootPath, git, isGit },
+  relPath = '/'
+) {
+  const absFullPath = p.join(rootPath, relPath);
 
-        result.isDir = true;
-        result.dirFileCount = fileCount;
-      } else {
-        result.isDir = false;
+  try {
+    await fs.access(absFullPath, fsc.R_OK);
+  } catch {
+    return new Error('invalid path'); // TODO: maybe do logging here
+  }
+
+  let files = await fs.readdir(absFullPath);
+
+  if (files.length === 0) return [];
+
+  if (isGit) {
+    const ignoredFiles = await git.checkIgnore(files);
+    ignoredFiles.push('.git'); // TODO: additional ignore files comes here
+    // TODO: ignore .git only if it's root directory of git repo
+    files = files.filter((file) => !ignoredFiles.includes(file));
+  }
+
+  const filesInfo = await getFilesInfo(absFullPath, files);
+
+  await Promise.all(
+    filesInfo.map(async (fileInfo) => {
+      if ('children' in fileInfo) {
+        const subFilesInfo = await getProject(
+          { rootPath, git, isGit },
+          p.join(relPath, fileInfo.name)
+        );
+
+        filesInfo.push(...subFilesInfo);
       }
-
-      result.size = fileStat.size;
-
-      return result;
     })
   );
 

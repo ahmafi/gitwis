@@ -39,7 +39,7 @@ const graphql = require('./graphql');
 
   const serverStarted = () => {
     logger.info(`gitwis running at http://localhost:${server.address().port}`);
-    logger.info(`project root directory: ${p.resolve(args.path)}`);
+    logger.info(`project root directory: ${p.resolve(args.rootPath)}`);
   };
 
   if (args.port === 'auto') {

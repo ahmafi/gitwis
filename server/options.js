@@ -79,9 +79,9 @@ module.exports = async function resolveOptions() {
     return null;
   }
 
-  const path = p.resolve(program.processedArgs[0]);
+  const rootPath = p.resolve(program.processedArgs[0]);
 
-  const git = simpleGit(path);
+  const git = simpleGit(rootPath);
   let isGit = false;
   let gitInstalled = true;
   try {
@@ -99,7 +99,7 @@ module.exports = async function resolveOptions() {
   }
 
   return {
-    path,
+    rootPath,
     ...program.opts(),
     isGit,
     git,
