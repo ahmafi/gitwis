@@ -21,7 +21,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon -e js,gql server.js",
     "start": "node server.js"
   },
   "dependencies": {
