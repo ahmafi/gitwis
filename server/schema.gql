@@ -1,17 +1,52 @@
 """
-Main query
+JSON
 """
-type Query {
-  files(path: String!): [File!]
-}
+scalar JSON
+
+"""
+JSONObject
+"""
+scalar JSONObject
 
 """
 File information
 """
 type File {
   name: String!
-  extension: String
   size: Int!
-  isDir: Boolean!
-  dirFileCount: Int
+}
+
+"""
+Directory information
+"""
+type Directory {
+  name: String!
+  """
+  size in bytes
+  """
+  size: Int!
+  root: Boolean!
+  """
+  size in bytes
+  """
+  children: [String!]!
+}
+
+"""
+File And Directory union
+"""
+union FileAndDir = File | Directory
+
+"""
+Main query
+"""
+type Query {
+  """
+  files query is currently only for debugging
+  """
+  files(path: String!): [FileAndDir!]
+  """
+  query all project files
+  """
+  tree: JSONObject
 }

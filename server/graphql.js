@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 const p = require('path');
-const { getFiles, getProject } = require('./utils');
+const { getFiles, getTree } = require('./utils');
 const { loadSchemaSync } = require('@graphql-tools/load');
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
+const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json');
 
 module.exports = async (programArgs) => {
   const typeDefs = loadSchemaSync(p.join(__dirname, 'schema.gql'), {
@@ -13,15 +14,14 @@ module.exports = async (programArgs) => {
   });
 
   const resolvers = {
+    JSON: GraphQLJSON,
+    JSONObject: GraphQLJSONObject,
     Query: {
       files: async (obj, { path }) => {
         const files = await getFiles(programArgs, path);
         return files;
       },
-      project: async (obj, { path }) => {
-        const project = await getProject(programArgs, path);
-        return project;
-      },
+      tree: async () => await getTree(programArgs),
     },
 
     FileAndDir: {

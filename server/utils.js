@@ -13,22 +13,19 @@ exports.errorToObject = (err) => {
   return obj;
 };
 
-const getFilesInfo = (absFullPath, files) => {
+const getFilesInfo = (path, files) => {
   return Promise.all(
     files.map(async (file) => {
       const result = { name: file };
 
-      const fileStat = await fs.stat(p.join(absFullPath, file));
+      const fileStat = await fs.stat(p.join(path, file));
 
       if (fileStat.isDirectory()) {
-        const dirFiles = await fs.readdir(p.join(absFullPath, file));
-
-        result.children = dirFiles;
+        // const children = await fs.readdir(p.join(parentPath, file));
+        result.size = 0;
       } else {
-        result.extension = p.extname(file).slice(1);
+        result.size = fileStat.size;
       }
-
-      result.size = fileStat.size;
 
       return result;
     })
@@ -72,19 +69,14 @@ exports.getFiles = async function getFiles(
   return filesInfo;
 };
 
-exports.getProject = async function getProject(
-  { rootPath, git, isGit },
-  relPath = '/'
-) {
-  const absFullPath = p.join(rootPath, relPath);
-
+const getDir = async (path, git, isGit) => {
   try {
-    await fs.access(absFullPath, fsc.R_OK);
+    await fs.access(path, fsc.R_OK);
   } catch {
     return new Error('invalid path'); // TODO: maybe do logging here
   }
 
-  let files = await fs.readdir(absFullPath);
+  let files = await fs.readdir(path);
 
   if (files.length === 0) return [];
 
@@ -95,21 +87,46 @@ exports.getProject = async function getProject(
     files = files.filter((file) => !ignoredFiles.includes(file));
   }
 
-  const filesInfo = await getFilesInfo(absFullPath, files);
+  const filesObj = {};
+  files.forEach((file) => (filesObj[file] = {}));
 
-  await Promise.all(
-    filesInfo.map(async (fileInfo) => {
-      if ('children' in fileInfo) {
-        const subFilesInfo = await getProject(
-          { rootPath, git, isGit },
-          p.join(relPath, fileInfo.name)
-        );
+  return filesObj;
+};
 
-        filesInfo.push(...subFilesInfo);
-      }
-    })
-  );
+exports.getTree = async function getTree({ rootPath, git, isGit }) {
+  const tree = {
+    children: await getDir(rootPath, git, isGit),
+    size: 0,
+  };
 
-  // TODO: file hash
-  return filesInfo;
+  const stack = [[tree, undefined, rootPath, false]];
+
+  while (stack.length) {
+    const [object, parent, parentPath, visited] = stack.pop();
+
+    if (!visited && object.children) {
+      stack.push([object, parent, parentPath, true]);
+
+      await Promise.all(
+        Object.entries(object.children).map(async ([name, child]) => {
+          const childPath = p.join(parentPath, name);
+          const childStat = await fs.stat(childPath); // FIXME error handling
+          if (childStat.isDirectory()) {
+            child.size = 0; // Ignore the directory size (usually a static size like 4096)
+            // child.size = childStat.size; // Use this to add up directory sizes as well
+
+            child.children = await getDir(childPath, git, isGit);
+          } else {
+            child.size = childStat.size;
+          }
+
+          stack.push([child, object, childPath]);
+        })
+      );
+    } else if (parent) {
+      parent.size += object.size;
+    }
+  }
+
+  return tree;
 };
